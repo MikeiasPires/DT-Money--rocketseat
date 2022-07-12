@@ -4,8 +4,7 @@ import CloseImg from '../../assets/close.svg'
 import Income from '../../assets/income.svg'
 import Outcome from '../../assets/outcome.svg'
 import { FormEvent, useState } from "react"
-
-
+import {api} from '../../services/api'
 
 
 interface NewTransactionModal{
@@ -15,33 +14,32 @@ interface NewTransactionModal{
 
 
 export function TransactionModal({isOpen,onRequestClose}:NewTransactionModal){
-   
+
    const [type, setType] = useState('deposit');
    const [title, setTitle] =useState('');
    const [value,setValue] = useState(0);
    const [category,setCategory] = useState('');
    
-   
-   
    function handleSetTypeDeposit(){
     setType('deposit')
    }
-   
    function handleSetTypewithdrown(){
     setType('withdrown')
    }
     
-    
    function handleCreateNewTransaction(event:FormEvent){
     event.preventDefault();
+     
+   const data = {
+  title,
+  value,
+  category,
+  type,
+  }
 
-    console.log({
-        value,
-        title,
-        category,
-        type,}
-    )
-   }
+  api.post('/transactions', data)
+
+  }
 
    
     return (
