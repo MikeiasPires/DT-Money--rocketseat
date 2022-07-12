@@ -1,12 +1,27 @@
-import { useEffect } from "react"
+import { useEffect,useState } from "react"
 import { Container } from "./style"
 import {api} from "../../services/api"
 
-export function TrasitionTable(){
+interface TransitionTableProps{
+    id:number;
+    title: string;
+    amount:number;
+    category:string
+    type: string; 
+    createdAt:string;
 
+}
+
+
+
+
+export function TrasitionTable(){
+ 
+    const [transactions ,setTransactions] = useState<TransitionTableProps[]>([])
+ 
  useEffect (() =>{
    api.get('transactions')
-   .then(response => console.log(response.data))
+   .then(response => setTransactions (response.data.transactions    ))
  },[])
 
     return(
@@ -21,23 +36,21 @@ export function TrasitionTable(){
         </tr>
     </thead>
     <tbody>
+       
+        {transactions.map(transaction =>{
+            return (
+        <tr key={transaction.id}>
+            <td >{transaction.title}</td>
+            <td className={transaction.type}>{transaction.amount}</td>
+            <td>{transaction.category}</td>
+            <td>{transaction.createdAt}</td>
+        </tr>
+            )
+        })}
+
         <tr>
         <td >Desenvolvimento web</td>
         <td className="Deposit">R$ 500.00</td>
-        <td>Desenvolvimento</td>
-        <td>20/06/2022</td>
-        </tr>
-        
-        <tr>
-        <td>Parachoque</td>
-        <td className="witchrrow">R$ -200.00</td>
-        <td>Carro</td>
-        <td>24/07/2022</td>
-        </tr>
-
-        <tr>
-        <td>Desenvolvimento web</td>
-        <td>R$ 500.00</td>
         <td>Desenvolvimento</td>
         <td>20/06/2022</td>
         </tr>
