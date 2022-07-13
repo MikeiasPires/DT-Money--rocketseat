@@ -1,28 +1,12 @@
-import { useEffect,useState } from "react"
+import { useContext } from "react"
+import { TransactionsContext } from "../../TransactionsContext"
 import { Container } from "./style"
-import {api} from "../../services/api"
-
-interface TransitionTableProps{
-    id:number;
-    title: string;
-    amount:number;
-    category:string
-    type: string; 
-    createdAt:string;
-
-}
-
 
 
 
 export function TrasitionTable(){
- 
-    const [transactions ,setTransactions] = useState<TransitionTableProps[]>([])
- 
- useEffect (() =>{
-   api.get('transactions')
-   .then(response => setTransactions (response.data.transactions    ))
- },[])
+
+ const {transactions} = useContext(TransactionsContext)
 
     return(
         <Container>
@@ -41,9 +25,14 @@ export function TrasitionTable(){
             return (
         <tr key={transaction.id}>
             <td >{transaction.title}</td>
-            <td className={transaction.type}>{transaction.amount}</td>
+            <td className={transaction.type}>{ new Intl.NumberFormat('PT-BR',
+            {
+                style:'currency',
+                currency: 'BRL',
+            }).format(transaction.amount) }</td>
             <td>{transaction.category}</td>
-            <td>{transaction.createdAt}</td>
+            <td>{ new Intl.DateTimeFormat('PT-BR').format(new Date(transaction.createdAt ))}
+             </td>
         </tr>
             )
         })}
