@@ -3,9 +3,8 @@ import {Container,SubmitButton,TransactionTypeContainer, RadioBox} from '../../c
 import CloseImg from '../../assets/close.svg'
 import Income from '../../assets/income.svg'
 import Outcome from '../../assets/outcome.svg'
-import { FormEvent, useState, useContext } from "react"
-import {api} from '../../services/api'
-import { TransactionsContext } from "../../TransactionsContext"
+import { FormEvent, useState,  } from "react"
+import { useTransactions } from "../../Hooks/useTransactions"
 
 
 interface NewTransactionModal{
@@ -21,8 +20,7 @@ export function TransactionModal({isOpen,onRequestClose}:NewTransactionModal){
    const [amount,setAmount] = useState(0);
    const [category,setCategory] = useState('');
     
-   const {createTransaction } =  useContext(TransactionsContext)
-
+   const {createTransaction } =  useTransactions();
 
    function handleSetTypeDeposit(){
     setType('deposit')
@@ -31,16 +29,23 @@ export function TransactionModal({isOpen,onRequestClose}:NewTransactionModal){
     setType('withdrown')
    }
     
-   function handleCreateNewTransaction(event:FormEvent){
+
+  async function handleCreateNewTransaction(event:FormEvent){
     event.preventDefault();
       
-     
-    createTransaction({
+    await createTransaction({
       title,
       amount,
       category,
       type
     })
+
+    setType('deposit');
+    setTitle('')
+    setAmount(0)
+    setCategory('')
+
+    onRequestClose()
   }
 
    
